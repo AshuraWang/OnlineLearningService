@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from TestModel.models import Prediction
 
+GOOD_DICT = {0: "NG", 1: "OK"}
+
 
 def insert(request_id, model_id, confidence, good, cost_time, timestamp, data):
     prediciton = Prediction(
@@ -19,15 +21,23 @@ def insert(request_id, model_id, confidence, good, cost_time, timestamp, data):
 def query_all():
     plist = Prediction.objects.order_by("timestamp")
     response = ''
+    history_list = []
     for pred in plist:
-        response += f"request_id:{pred.request_id}  " \
-                    f"model_id:{pred.model_id}  " \
-                    f"confidence:{pred.confidence}  " \
-                    f"good:{pred.good}  " \
-                    f"cost_time:{pred.cost_time}  " \
-                    f"timestamp:{pred.timestamp}  " \
-                    f"data:{pred.data}\n"
-    return response
+        r = f"model_id: {'%3d'%pred.model_id}    " \
+            f"confidence: {'%.2f'%pred.confidence}    " \
+            f"good: {GOOD_DICT[pred.good]}    " \
+            f"cost_time: {'% 3d'%pred.cost_time}    " \
+            f"timestamp: {pred.timestamp}    " \
+            f"data: {'%40s' % pred.data}    " \
+            f"request_id: {'%40s' % pred.request_id}\n    "
+            # r = "{0: >100s}".format(pred.request_id)
+        response += r
+
+        history = ['%300s' % pred.data, GOOD_DICT[pred.good], '%.2f'%pred.confidence,
+                   '%3d'%pred.model_id,   '% 3dms'%pred.cost_time,
+                   pred.timestamp, '%300s' % pred.request_id]
+        history_list.append(history)
+    return response, history_list
 
 
 

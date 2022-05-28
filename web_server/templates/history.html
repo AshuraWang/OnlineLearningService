@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Predict History</title>
+</head>
+<body>
+    <p>
+        <table border="10">
+        <tr>
+            <td align="right"> data </td>
+            <td align="right"> good </td>
+            <td align="right"> confidence </td>
+            <td align="right"> model_id </td>
+            <td align="right"> cost_time </td>
+            <td align="right"> timestamp </td>
+            <td align="right"> request_id </td>
+        {% for history in history_list %}
+        <tr>
+            {% for i in history %}
+                <td align="right">   {{i}} </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </table>
+    </p>
+</body>
+</html>

@@ -2,30 +2,39 @@ import os.path
 import uuid
 import datetime
 from django.http import HttpResponse
-from PIL import Image
 import urllib.request
-import io
 import json
 
-from WebServer.database.prediction import insert
+from WebServer.database.model import insert
 from ml_model import ip_classifier
 
-GOOD_DICT = {0: "NG", 1: "OK"}
-
-
 def train(request):
-    print(request.POST)
-    print(request)
-    new_data = request.POST.get("data")
-    print(new_data)
+
+    # Parse and save new data.
+    try:
+        new_data = request.body
+        # new_data = (str(new_data).split('&')[0])
+        # print(new_data)
+        json_data = json.loads(new_data)
+    except:
+        return HttpResponse("Data Broken!!!\n")
+    ok_num, ng_num = save(json_data)
+    if ok_num < 1 or ng_num < 1:
+        return HttpResponse("Not enough data!!!\n")
+
+    model_path = ip_classifier.train()
+    architecture = ip_classifier.arc
+    epoch = ip_classifier.epoch
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d--%H:%M:%S')
+    insert(architecture, timestamp, epoch, model_path)
     return HttpResponse("")
 
 
 def save(json_data, save_path='../data_cache/dataset'):
-    # if not os.path.exists(save_path):
-    #     os.makedirs(save_path)
     ok_path = os.path.join(save_path, 'OK')
     ng_path = os.path.join(save_path, 'NG')
+
+    # Remove previous data
     if os.path.exists(ok_path):
         os.system(f"rm -rf {ok_path}")
     if os.path.exists(ng_path):
@@ -36,6 +45,7 @@ def save(json_data, save_path='../data_cache/dataset'):
     data = json_data['data']
     ok_list, ng_list = data['ok'], data['ng']
 
+    # Save data to local path
     for url in ok_list:
         try:
             response = urllib.request.urlopen(url)

@@ -24,9 +24,12 @@ class IPhoneValueClassifier:
             transforms.Resize((224, 224)),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
+
+        # train config
         self.sigmoid = torch.nn.Sigmoid()
         self.criterion = torch.nn.BCELoss()
         self.optimizer = torch.optim.Adam(self.model.parameters())
+        self.epoch = 100
 
     def switch_model(self, arc):
         self.arc = arc
@@ -34,7 +37,10 @@ class IPhoneValueClassifier:
             self.model = mobilenet_v3_small(pretrained=False, num_classes=1)
         elif self.arc == 'resnet18':
             self.model = resnet18(pretrained=False, num_classes=1)
+        else:
+            return False
         self.optimizer = torch.optim.Adam(self.model.parameters())
+        return True
 
     def predict(self, image, ckpt, threshold=0.5):
         self.model.load_state_dict(torch.load(ckpt))
@@ -53,12 +59,11 @@ class IPhoneValueClassifier:
     def train(self,
               dataroot='../data_cache/dataset',
               save_path='../checkpoint',
-              epoch=100,
-              batch_size=4):
+              batch_size=1):
         self.model.train()
         dataset = ImageFolder(dataroot, transform=self.data_transforms) # Image Aug might need
         dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-        for e in range(epoch):
+        for e in range(self.epoch):
             for i, (x, t) in enumerate(dataloader):
                 t = t.unsqueeze(1).float()
                 y = self.model(x)

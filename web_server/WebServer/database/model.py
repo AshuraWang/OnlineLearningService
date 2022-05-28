@@ -19,6 +19,13 @@ def query_all():
     return response
 
 
+def get_latest_model_id():
+    modellist = Model.objects.order_by("-model_id")
+    if len(modellist) == 0:
+        return -1
+    return modellist[0].model_id
+
+
 def delete_all():
     modellist = Model.objects.all()
     for model in modellist:

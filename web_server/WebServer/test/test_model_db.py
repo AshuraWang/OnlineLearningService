@@ -12,7 +12,7 @@ def test_model_query_all(request):
     return HttpResponse(response)
 
 
-def test_delete_all(request):
+def test_model_delete_all(request):
     delete_all()
     return HttpResponse("Delete All Data in Model!!!!!\n")
 

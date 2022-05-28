@@ -32,7 +32,7 @@ def get_last_two_models():
         return (modellist[0].model_id, modellist[0].architecture, modellist[0].path), (-1, -1, -1)
     if len(modellist) == 0:
         return (-1, -1, -1), (-1, -1, -1)
-    return (modellist[1].model_id, modellist[1].architecture, modellist[1].path), \
+    return (modellist[0].model_id, modellist[0].architecture, modellist[0].path), \
            (modellist[1].model_id, modellist[1].architecture, modellist[1].path)
 
 

@@ -36,7 +36,7 @@ def predict(request):
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d--%H:%M:%S')
         confidence, good, cost_time = ip_classifier.predict(image, model1_path)
 
-        # insert(request_id, model1_id, confidence, good, cost_time, timestamp, image_url)
+        insert(request_id, model1_id, confidence, good, cost_time, timestamp, image_url)
         return HttpResponse(f"Only one model availabel."
                             f"This image is {GOOD_DICT[good]} wiht conf {confidence}\n")
     else:
@@ -45,13 +45,18 @@ def predict(request):
         model2_result = pool.apply_async(model_infer, (model2_arch, model2_path, image))
         pool.close()
         pool.join()
-        model1_result = model1_result.get()
-        model2_result = model2_result.get()
-        # return HttpResponse("123")
+
+        request_id_1, timestamp_1, confidence_1, good_1, cost_time_1 = model1_result.get()
+        request_id_2, timestamp_2, confidence_2, good_2, cost_time_2 = model2_result.get()
+        print(confidence_1, confidence_2)
+        insert(request_id_1, model1_id, confidence_1, good_1, cost_time_1, timestamp_1, image_url)
+        insert(request_id_2, model2_id, confidence_2, good_2, cost_time_2, timestamp_2, image_url)
+
+
         return HttpResponse(f"Latest model result: "
-                            f"This image is {GOOD_DICT[model1_result[3]]} with conf {model1_result[2]}\n"
+                            f"This image is {GOOD_DICT[good_1]} with conf {confidence_1}\n"
                             f"Second to last model result: "
-                            f"This image is {GOOD_DICT[model2_result[3]]} with conf {model2_result[2]}\n")
+                            f"This image is {GOOD_DICT[good_2]} with conf {confidence_2}\n")
 
 
 def model_infer(model_arch, model_path, image):

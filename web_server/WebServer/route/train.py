@@ -27,7 +27,7 @@ def train(request):
     epoch = ip_classifier.epoch
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d--%H:%M:%S')
     insert(architecture, timestamp, epoch, model_path)
-    return HttpResponse("")
+    return HttpResponse(f"Saved at {model_path}")
 
 
 def save(json_data, save_path='../data_cache/dataset'):

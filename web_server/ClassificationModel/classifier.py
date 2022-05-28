@@ -13,7 +13,7 @@ from torchvision.models.resnet import resnet18
 
 
 class IPhoneValueClassifier:
-    def __init__(self, arc='mobilenet_v3'):
+    def __init__(self, arc='mobilenet_v3', epoch=100):
         self.arc = arc
         if self.arc == 'mobilenet_v3':
             self.model = mobilenet_v3_small(pretrained=False, num_classes=1)
@@ -29,8 +29,7 @@ class IPhoneValueClassifier:
         self.sigmoid = torch.nn.Sigmoid()
         self.criterion = torch.nn.BCELoss()
         self.optimizer = torch.optim.Adam(self.model.parameters())
-        self.epoch = 100
-
+        self.epoch = epoch
     def switch_model(self, arc):
         self.arc = arc
         if self.arc == 'mobilenet_v3':

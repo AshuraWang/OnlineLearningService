@@ -47,7 +47,7 @@ class IPhoneValueClassifier:
         output = output_tensor.data.cpu().numpy().squeeze()
         confidence = float(output)
         good = int(confidence > threshold)
-        # print(confidence)
+        print(confidence)
         return round(confidence, 3), good, int((end_time-start_time)*1000)
 
     def train(self,
@@ -74,7 +74,12 @@ class IPhoneValueClassifier:
 
 
 if __name__ == '__main__':
-    classfier = IPhoneValueClassifier("resnet18")
-    image_path= '/home/wxu/Code/OnlineLearningService/data_cache/dataset/OK/00.jpg'
-    image = Image.open(image_path)
-    classfier.predict(image, '../checkpoint/resnet18_92c15a96-602c-4967-89cc-f1d3035776e9.pth')
+    classfier = IPhoneValueClassifier()
+    image_path= '/home/wxu/Code/OnlineLearningService/data_cache/dataset/NG/92.jpg'
+    # image = Image.open(image_path)
+    # classfier.predict(image, '../checkpoint/mobilenet_v3_9ab2bc28-b0e1-49be-a57e-cb44079eaffe.pth')
+
+    a = time()
+    s = classfier.train()
+    b = time()
+    print(b-a, s)

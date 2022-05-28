@@ -24,8 +24,8 @@ def predict(request):
     request_id = uuid.uuid4()
     model_id, model_arch, model_path = get_latest_model_id()
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d--%H:%M:%S')
-    confidence, good, cost_time = ip_classifier.predict(image,
-                                                        '../checkpoint/mobilenet_v3_9ab2bc28-b0e1-49be-a57e-cb44079eaffe.pth')
+    confidence, good, cost_time = \
+        ip_classifier.predict(image, '../checkpoint/mobilenet_v3_dcc68777-89c0-4ab4-953e-965809288812.pth')
 
     insert(request_id, model_id, confidence, good, cost_time, timestamp, image_url)
     return HttpResponse(f"This image is {GOOD_DICT[good]}\n")

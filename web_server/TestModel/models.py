@@ -16,4 +16,4 @@ class Prediction(models.Model):
     good = models.IntegerField()
     cost_time = models.FloatField()
     timestamp = models.CharField(max_length=40)
-    data = models.CharField(max_length=100)
+    data = models.CharField(max_length=300)

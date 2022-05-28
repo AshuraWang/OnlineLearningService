@@ -23,7 +23,7 @@ def get_latest_model_id():
     modellist = Model.objects.order_by("-model_id")
     if len(modellist) == 0:
         return -1
-    return modellist[0].model_id
+    return modellist[0].model_id, modellist[0].architecture, modellist[0].path
 
 
 def delete_all():

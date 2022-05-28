@@ -17,7 +17,7 @@ def insert(request_id, model_id, confidence, good, cost_time, timestamp, data):
 
 
 def query_all():
-    plist = Prediction.objects.all()
+    plist = Prediction.objects.order_by("-timestamp")
     response = ''
     for pred in plist:
         response += f"request_id:{pred.request_id}  " \

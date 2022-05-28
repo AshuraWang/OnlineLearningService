@@ -1,13 +1,15 @@
-import os.path
-import cv2
+import os
+from PIL import Image
+import uuid
+from time import time
+
 import torch
-from torchvision.models.mobilenetv3 import mobilenet_v3_small
-from torchvision.models.resnet import resnet18
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
-from time import time
-import uuid
+
+from torchvision.models.mobilenetv3 import mobilenet_v3_small
+from torchvision.models.resnet import resnet18
 
 
 class IPhoneValueClassifier:
@@ -26,6 +28,14 @@ class IPhoneValueClassifier:
         self.criterion = torch.nn.BCELoss()
         self.optimizer = torch.optim.Adam(self.model.parameters())
 
+    def switch_model(self, arc):
+        self.arc = arc
+        if self.arc == 'mobilenet_v3':
+            self.model = mobilenet_v3_small(pretrained=False, num_classes=1)
+        elif self.arc == 'resnet18':
+            self.model = resnet18(pretrained=False, num_classes=1)
+        self.optimizer = torch.optim.Adam(self.model.parameters())
+
     def predict(self, image, ckpt, threshold=0.5):
         self.model.load_state_dict(torch.load(ckpt))
         self.model.eval()
@@ -35,10 +45,10 @@ class IPhoneValueClassifier:
         output_tensor = self.sigmoid(self.model(input_tensor))
         end_time = time()
         output = output_tensor.data.cpu().numpy().squeeze()
-        confidence = output
+        confidence = float(output)
         good = int(confidence > threshold)
-        print(confidence)
-        return confidence, good, int((end_time-start_time)*1000)
+        # print(confidence)
+        return round(confidence, 3), good, int((end_time-start_time)*1000)
 
     def train(self,
               dataroot='../data_cache/dataset',
@@ -65,8 +75,6 @@ class IPhoneValueClassifier:
 
 if __name__ == '__main__':
     classfier = IPhoneValueClassifier("resnet18")
-    image = '/media/wxu/My Passport/DownloadForHsm/Machine Learning HW - SW v3/Machine Learning HW - SW v3/dataset/NG/03.jpg'
-    image = cv2.imread(image)
-    # classfier.predict(image)
-    classfier.train()
-    # classfier.predict(image, './checkpoint/mobilenet_v3_9ab2bc28-b0e1-49be-a57e-cb44079eaffe.pth')
+    image_path= '/home/wxu/Code/OnlineLearningService/data_cache/dataset/OK/00.jpg'
+    image = Image.open(image_path)
+    classfier.predict(image, '../checkpoint/resnet18_92c15a96-602c-4967-89cc-f1d3035776e9.pth')

@@ -21,8 +21,8 @@
 |  route   | method  | purpose | example |
 |  ----  | ----  | ---- |---- |
 | /metadata |GET  | return available models |  `curl http://127.0.0.1:8000/metadata`  |
-| /train | POST  | retrain model |  `curl http://127.0.0.1:8000/train -H "Content-Type:application/json"  -d '@./data_utils/new_labeled_data_small.json'`  |
-| /predict |POST  | make predictions with 2 latest models in parallel |  `curl -d image_url=$cdn_url http://127.0.0.1:8000/predict` or visit http://127.0.0.1:8000/predict and upload local image |
+| /train | POST  | retrain model, epoch and model architecture can be set manually |  `curl http://127.0.0.1:8000/train -H "Content-Type:application/json"  -d '@./data_utils/new_labeled_data_small.json' -d '{"epoch":2, "model_arc":"resnet18"}'` epoch and model_arc can default, default value is 1 and 'mobilenet_v3' respectively. |
+| /predict |POST  | make predictions with 2 latest models in parallel, support curl with cdn url or upload local image via web |  `curl -d image_url=$cdn_url http://127.0.0.1:8000/predict` or visit http://127.0.0.1:8000/predict and upload local image |
 | /history | POST&GET | return all prediction results |  `curl http://127.0.0.1:8000/history -d nohtml=1` or visit http://127.0.0.1:8000/history |
 
 ## Test Data

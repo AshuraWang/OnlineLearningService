@@ -9,25 +9,45 @@ from WebServer.database.model import insert
 from ml_model import ip_classifier
 
 def train(request):
-
+    params = ""
     # Parse and save new data.
     try:
-        new_data = request.body
-        # new_data = (str(new_data).split('&')[0])
-        # print(new_data)
+        request_body = request.body.decode('UTF-8')
+        json_par = request_body.split('&')
+        new_data = json_par[0]
+        if len(json_par) == 2:
+            params = json_par[1]
         json_data = json.loads(new_data)
     except:
         return HttpResponse("Data Broken!!!\n")
+
     ok_num, ng_num = save(json_data)
     if ok_num < 1 or ng_num < 1:
         return HttpResponse("Not enough data!!!\n")
+
+    # Parse params
+    try:
+        pars = json.loads(params)
+        if 'epoch' in pars:
+            epoch = pars['epoch']
+            if isinstance(epoch, int):
+                ip_classifier.epoch = pars['epoch']
+        arc = pars['model_arc']
+        if 'model_arc' in pars:
+            # print(arc)
+            if arc in ['mobilenet_v3', 'resnet18']:
+                ip_classifier.switch_model(arc)
+    except:
+        print("No valid params")
+        pass
 
     model_path = ip_classifier.train()
     architecture = ip_classifier.arc
     epoch = ip_classifier.epoch
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d--%H:%M:%S')
     insert(architecture, timestamp, epoch, model_path)
-    return HttpResponse(f"Saved at {model_path}")
+    ip_classifier.reset()
+    return HttpResponse(f"Saved at {model_path}\n")
 
 
 def save(json_data, save_path='../data_cache/dataset'):
@@ -39,7 +59,6 @@ def save(json_data, save_path='../data_cache/dataset'):
         os.system(f"rm -rf {ok_path}")
     if os.path.exists(ng_path):
         os.system(f"rm -rf {ng_path}")
-    print(os.path.exists(ok_path))
     os.makedirs(ok_path)
     os.makedirs(ng_path)
 

@@ -30,6 +30,7 @@ class IPhoneValueClassifier:
         self.criterion = torch.nn.BCELoss()
         self.optimizer = torch.optim.Adam(self.model.parameters())
         self.epoch = epoch
+
     def switch_model(self, arc):
         self.arc = arc
         if self.arc == 'mobilenet_v3':
@@ -77,6 +78,10 @@ class IPhoneValueClassifier:
             os.makedirs(save_path)
         torch.save(self.model.state_dict(), os.path.join(save_path, model_name))
         return os.path.join(save_path, model_name)
+
+    def reset(self):
+        self.epoch = 1
+        self.arc = 'mobilenet_v3'
 
 
 if __name__ == '__main__':

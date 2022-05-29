@@ -1,6 +1,6 @@
 # OnlineLearningService
 
-##Installation
+## Installation
 1. clone repo:`git clone https://github.com/AshuraWang/OnlineLearningService.git`
 2. install mysql server:`sudo apt-get install mysql-server`
 3. if run code locally, install requirement: `pip3 install -r /requirement.txt -i https://pypi.tuna.tsinghua.edu.cn/simple`
@@ -8,15 +8,15 @@
 
 
 
-##Start Service
-###Run code locally
+## Start Service
+### Run code locally
 1. start mysql server: `service mysql start`
 2. `cd web_server`
 3. start web service: `python manage.py runserver 127.0.0.1:8000`
-###Use docker
+### Use docker
 1. build docker: `sh build_docker.sh`
 2. run docker: 'sh run.sh'
-##Route
+## Route
 
 |  route   | method  | purpose | example |
 |  ----  | ----  | ---- |---- |

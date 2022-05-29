@@ -33,6 +33,7 @@ def predict(request):
             except:
                 return HttpResponse(f"Image Not Found!\n")
         else:
+            image_url = 'local update image'
             try:
                 img_path = os.path.join(settings.STATICFILES_DIRS[0], 'temp.jpg')
                 img = request.FILES.get('photo', None)
@@ -64,7 +65,6 @@ def predict(request):
                                 f"This image is {GOOD_DICT[good]} wiht conf {confidence}\n"
             return HttpResponse(result_str1)
         else:
-            image_url = 'local update image'
             pool = Pool(processes=2)
             model1_result = pool.apply_async(model_infer, (model1_arch, model1_path, image))
             model2_result = pool.apply_async(model_infer, (model2_arch, model2_path, image))

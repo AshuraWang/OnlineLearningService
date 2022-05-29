@@ -13,7 +13,7 @@ from torchvision.models.resnet import resnet18
 
 
 class IPhoneValueClassifier:
-    def __init__(self, arc='mobilenet_v3', epoch=100):
+    def __init__(self, arc='mobilenet_v3', epoch=1):
         self.arc = arc
         if self.arc == 'mobilenet_v3':
             self.model = mobilenet_v3_small(pretrained=False, num_classes=1)
@@ -73,6 +73,8 @@ class IPhoneValueClassifier:
                 print(f'epoch:{e}-{i}th data-loss:{loss.data.cpu().numpy()}')
                 self.optimizer.step()
         model_name = f"{self.arc}_{str(uuid.uuid4())}.pth"
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
         torch.save(self.model.state_dict(), os.path.join(save_path, model_name))
         return os.path.join(save_path, model_name)
 

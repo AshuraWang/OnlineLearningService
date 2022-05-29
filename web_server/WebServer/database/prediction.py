@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from TestModel.models import Prediction
+from DatabaseModel.models import Prediction
 
 GOOD_DICT = {0: "NG", 1: "OK"}
 

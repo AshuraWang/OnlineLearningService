@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from TestModel.models import Model
+from DatabaseModel.models import Model
 
 
 def insert(architecture, timestamp, epoch, path):

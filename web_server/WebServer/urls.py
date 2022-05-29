@@ -1,6 +1,6 @@
 from django.urls import path
 from .test import test_model_db, test_prediction_db, test_save_new_data
-from .route import metadata, history, predict, train, upload
+from .route import metadata, history, predict, train
 urlpatterns = [
     path('test/model_insert', test_model_db.test_model_insert),
     path('test/model_query_all', test_model_db.test_model_query_all),

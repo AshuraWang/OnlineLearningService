@@ -39,6 +39,7 @@ def save(json_data, save_path='../data_cache/dataset'):
         os.system(f"rm -rf {ok_path}")
     if os.path.exists(ng_path):
         os.system(f"rm -rf {ng_path}")
+    print(os.path.exists(ok_path))
     os.makedirs(ok_path)
     os.makedirs(ng_path)
 
